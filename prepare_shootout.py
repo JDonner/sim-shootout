@@ -89,10 +89,11 @@ def convert_wiki(infile, processes=multiprocessing.cpu_count()):
 
 class ShootoutCorpus(gensim.corpora.TextCorpus):
     def get_texts(self):
-        lines = gensim.corpora.textcorpus.getstream(self.input)  # open file/reset stream to its start
-        for lineno, line in enumerate(lines):
-            yield line.split('\t')[1].split()  # return tokens (ignore the title before the tab)
-        self.length = lineno + 1
+        lineno = 0
+        with self.getstream() as lines: # open file/reset stream to its start
+            for lineno, line in enumerate(lines):
+                yield line.split('\t')[1].split()  # return tokens (ignore the title before the tab)
+            self.length = lineno + 1
 
 
 if __name__ == '__main__':
